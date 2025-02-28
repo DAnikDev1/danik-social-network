@@ -30,9 +30,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.3")
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.15")
-    implementation("io.springfox:springfox-boot-starter:3.0.0")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
 
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
 
@@ -40,6 +37,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    runtimeOnly("org.postgresql:postgresql")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

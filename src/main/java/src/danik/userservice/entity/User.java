@@ -34,7 +34,7 @@ public class User {
     @Column(name = "password", length = 128, nullable = false)
     private String password;
 
-    @Column(name = "active", nullable = false)
+    @Column(name = "active")
     private boolean active;
 
     @Column(name = "about_me", length = 4096)
