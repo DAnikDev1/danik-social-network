@@ -8,10 +8,7 @@ import src.danik.userservice.entity.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-
     UserDto toDto(User user);
-
-    User toEntity(UserDto userDto);
 
     // Без данных аннотаций при тесте будет маппинг в null
     @Mapping(target = "id", ignore = true)
