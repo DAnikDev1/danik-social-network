@@ -82,7 +82,7 @@ public class UserControllerTest {
         UserDto userDto2 = userService.registerUser(dto2);
 
         List<Long> ids = Arrays.asList(userDto1.getId(), userDto2.getId());
-        String jsonContent = objectMapper.writeValueAsString(ids); // [1, 2]
+        String jsonContent = objectMapper.writeValueAsString(ids);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/list")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -99,6 +99,7 @@ public class UserControllerTest {
         return UserRegistrationDto.builder()
                 .email("testEmail@email.com")
                 .username("username")
+                .password("password")
                 .build();
     }
 }
