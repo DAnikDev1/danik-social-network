@@ -46,9 +46,18 @@ public class UserController {
     @Operation(summary = "Delete user by id")
     @DeleteMapping(value = "/users/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
+        log.info("Deleting user with id {}", id);
         userService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    @Operation(summary = "Get users by ids")
+    @PostMapping("/users/list")
+    public List<UserDto> getAllUsersByIds(@RequestBody List<Long> ids) {
+        log.info("Received List of ids: {}", ids);
+        return userService.getAllUsersByIds(ids);
+    }
+
+
 
 
 }

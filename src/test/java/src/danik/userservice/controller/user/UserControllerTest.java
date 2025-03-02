@@ -14,6 +14,9 @@ import src.danik.userservice.dto.user.UserDto;
 import src.danik.userservice.dto.user.UserRegistrationDto;
 import src.danik.userservice.service.user.UserService;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -67,7 +70,28 @@ public class UserControllerTest {
     public void testThatUserCanBeDeletedWhenUserExist() throws Exception {
         UserRegistrationDto userRegistrationDto = getUserRegisterDto();
         UserDto userDto = userService.registerUser(userRegistrationDto);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/users/" + userDto.getId())).andExpect(status().isNoContent());
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/users/" + userDto.getId()))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void testThatUsersCanBeGetByIdsWhenUsersExist() throws Exception {
+        UserRegistrationDto dto1 = UserRegistrationDto.builder().username("user1").email("user1@email.com").password("pass1").build();
+        UserRegistrationDto dto2 = UserRegistrationDto.builder().username("user2").email("user2@email.com").password("pass2").build();
+        UserDto userDto1 = userService.registerUser(dto1);
+        UserDto userDto2 = userService.registerUser(dto2);
+
+        List<Long> ids = Arrays.asList(userDto1.getId(), userDto2.getId());
+        String jsonContent = objectMapper.writeValueAsString(ids); // [1, 2]
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/list")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonContent))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].username").value("user1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].email").value("user1@email.com"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].username").value("user2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].email").value("user2@email.com"));
     }
 
 
@@ -75,7 +99,6 @@ public class UserControllerTest {
         return UserRegistrationDto.builder()
                 .email("testEmail@email.com")
                 .username("username")
-                .password("password")
                 .build();
     }
 }

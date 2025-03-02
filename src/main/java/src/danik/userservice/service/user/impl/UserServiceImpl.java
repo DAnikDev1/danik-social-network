@@ -1,6 +1,7 @@
 package src.danik.userservice.service.user.impl;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
@@ -53,5 +54,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public List<UserDto> getAllUsersByIds(@NotNull List<Long> ids) {
+        return userRepository.findAllById(ids).stream().map(userMapper::toDto).toList();
     }
 }
