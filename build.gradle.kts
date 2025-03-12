@@ -3,6 +3,7 @@ plugins {
     id("org.springframework.boot") version "3.4.2"
     id("io.spring.dependency-management") version "1.1.7"
 }
+val springCloudVersion by extra("2024.0.0")
 
 group = "src.danik"
 version = "0.0.1-SNAPSHOT"
@@ -32,6 +33,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.3")
 
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
     annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
@@ -42,6 +44,11 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("com.h2database:h2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+    }
 }
 
 tasks.withType<Test> {
