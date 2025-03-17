@@ -30,10 +30,9 @@ public class UserController {
 
     @Operation(summary = "Get user by id")
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
 
     @Operation(summary = "Register new user")

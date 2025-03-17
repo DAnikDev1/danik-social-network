@@ -1,5 +1,6 @@
 package src.danik.userservice.service.user.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +35,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDto> getUserById(Long id) {
-        return userRepository.findById(id)
-                .map(userMapper::toDto);
+    public UserDto getUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User was not found"));
+        return userMapper.toDto(user);
     }
 
     @Override

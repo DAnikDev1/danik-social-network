@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface UserService {
     List<UserDto> getAllUsers();
 
-    Optional<UserDto> getUserById(Long id);
+    UserDto getUserById(Long id);
 
     UserDto registerUser(@Valid UserRegistrationDto userRegistrationDto);
 
