@@ -31,7 +31,6 @@ public class UserControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-
     @Test
     public void testThatUserRegisterIsSuccess() throws Exception {
         UserRegistrationDto userRegisterDto = getUserRegisterDto();
