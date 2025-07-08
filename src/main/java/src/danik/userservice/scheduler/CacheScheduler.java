@@ -31,9 +31,7 @@ public class CacheScheduler {
 
             try {
                 Set<Long> ids = postServiceConnect.getUserIdsFromPopularPosts(systemKey);
-                ids.forEach(id -> {
-                    cacheService.putInCache("popularUsers", id, userService.getUserById(id));
-                });
+                ids.forEach(id -> cacheService.putInCache("popularUsers", id, userService.getUserByIdInDB(id)));
                 
                 log.info("{} users was cached", ids.size());
             } catch (FeignException e) {

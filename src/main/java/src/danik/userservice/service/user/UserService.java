@@ -11,6 +11,8 @@ public interface UserService {
 
     UserDto getUserById(Long id);
 
+    UserDto getUserByIdInDB(Long id);
+
     UserDto registerUser(@Valid UserRegistrationDto userRegistrationDto);
 
     void delete(Long id);

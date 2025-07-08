@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import src.danik.userservice.dto.user.UserDto;
 import src.danik.userservice.dto.user.UserRegistrationDto;
@@ -18,7 +17,6 @@ import src.danik.userservice.service.user.UserService;
 import src.danik.userservice.service.user.validator.UserValidator;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +33,10 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(userMapper::toDto)
                 .toList();
+    }
+    public UserDto getUserByIdInDB(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User was not found"));
+        return userMapper.toDto(user);
     }
 
     @Override
