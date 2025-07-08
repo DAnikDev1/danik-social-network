@@ -5,22 +5,27 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import src.danik.userservice.dto.user.UserDto;
 import src.danik.userservice.dto.user.UserRegistrationDto;
 import src.danik.userservice.entity.User;
 import src.danik.userservice.mapper.user.UserMapper;
 import src.danik.userservice.repository.UserRepository;
+import src.danik.userservice.service.cache.CacheService;
 import src.danik.userservice.service.user.UserService;
 import src.danik.userservice.service.user.validator.UserValidator;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final CacheService cacheService;
     private final UserMapper userMapper;
     private final UserValidator userValidator;
 
@@ -34,8 +39,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Long id) {
+        UserDto userDto = cacheService.getFromCache("popularUsers", id, UserDto.class);
+        if (userDto != null) {
+            log.info("UserDto was found in hot cache: {}", userDto);
+            return userDto;
+        }
+        userDto = cacheService.getFromCache("users", id, UserDto.class);
+        if (userDto != null) {
+            log.info("UserDto was found in cold cache: {}", userDto);
+            return userDto;
+        }
+        log.info("Fetching user with id {} from database", id);
+
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User was not found"));
-        return userMapper.toDto(user);
+        userDto = userMapper.toDto(user);
+        cacheService.putInCache("users", id, userDto);
+
+        return userDto;
     }
 
     @Override
@@ -54,6 +74,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(value = {"users", "popularUsers"}, key = "#id")
     public void delete(Long id) {
         userRepository.deleteById(id);
     }
@@ -62,4 +83,5 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getAllUsersByIds(@NotNull List<Long> ids) {
         return userRepository.findAllById(ids).stream().map(userMapper::toDto).toList();
     }
+
 }
