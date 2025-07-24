@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +26,8 @@ public class UserController {
 
     @Operation(summary = "Get all users")
     @GetMapping("/users")
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers();
+    public Page<UserDto> getAllUsers(Pageable pageable) {
+        return userService.getAllUsers(pageable);
     }
 
     @Operation(summary = "Get user by id")

@@ -18,7 +18,6 @@ import src.danik.userservice.service.user.UserService;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,8 +54,10 @@ public class UserControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(userDto.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].username").value(userDto.getUsername()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].id").value(userDto.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].username").value(userDto.getUsername()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalElements").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalPages").value(1));
     }
     @Test
     public void testUserGetById() throws Exception {

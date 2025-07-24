@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import src.danik.userservice.dto.user.UserDto;
 import src.danik.userservice.dto.user.UserRegistrationDto;
@@ -28,11 +30,8 @@ public class UserServiceImpl implements UserService {
     private final UserValidator userValidator;
 
     @Override
-    public List<UserDto> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(userMapper::toDto)
-                .toList();
+    public Page<UserDto> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(userMapper::toDto);
     }
     public UserDto getUserByIdInDB(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User was not found"));
