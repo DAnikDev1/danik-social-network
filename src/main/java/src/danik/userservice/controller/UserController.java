@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import src.danik.userservice.dto.user.UserDto;
 import src.danik.userservice.dto.user.UserRegistrationDto;
+import src.danik.userservice.exception.DataValidationException;
 import src.danik.userservice.service.user.UserService;
 
 import java.util.List;
@@ -54,6 +55,9 @@ public class UserController {
     @Operation(summary = "Get users by ids")
     @PostMapping("/users/list")
     public List<UserDto> getAllUsersByIds(@RequestBody List<Long> ids) {
+        if (ids.size() >= 100) {
+            throw new DataValidationException("Collection is too long");
+        }
         log.info("Received List of ids: {}", ids);
         return userService.getAllUsersByIds(ids);
     }
